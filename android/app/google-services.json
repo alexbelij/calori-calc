@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:840550993749:android:90d4acd3388f8c208229dc",
+        "mobilesdk_app_id": "1:840550993749:android:7f0306bf747117b78229dc",
         "android_client_info": {
-          "package_name": "com.example.calory_calc"
+          "package_name": "frezycode.calory_calc"
         }
       },
       "oauth_client": [
         {
-          "client_id": "840550993749-24nd3f2fld8alkuk3osnjil1taucqju8.apps.googleusercontent.com",
+          "client_id": "840550993749-r0lg8honfenmm3gpk4l7rcgf8g0rr2bb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.calory_calc",
+            "package_name": "frezycode.calory_calc",
             "certificate_hash": "fdf19d2ff20f724be66ac5b1a5206f1f3092aa31"
           }
         },
