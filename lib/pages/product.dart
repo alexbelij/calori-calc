@@ -23,6 +23,7 @@ class ProductPage extends StatefulWidget{
 class _ProductPageState extends State<ProductPage> {
   String id;
   _ProductPageState(this.id);
+  final _grammController = new TextEditingController( );
   Product product = Product();
   String name = "";
   double calory = -1.0; double caloryConst = -1.0;
@@ -31,9 +32,20 @@ class _ProductPageState extends State<ProductPage> {
   double carboh = -1.0; double carbohConst = -1.0;
   BannerAd _bannerAd;
 
+  bool canWriteInDB = true;
+
+  final _formKey = GlobalKey<FormState>( );
+
+  setWriteStatus(state){
+    setState(){
+      canWriteInDB = state;
+    }
+  }
+
 @override
   void initState() {
     super.initState();
+    _grammController.text = '100.0';
       DBProductProvider.db.getProductById(int.parse(id)).then((res){
         setState(() {
           product = res;
@@ -46,7 +58,7 @@ class _ProductPageState extends State<ProductPage> {
       });
   }
 
-  void multiData(int grams){
+  void multiData(double grams){
     double multiplier = grams / 100;
      setState(() {
        calory = roundDouble(product.calory * multiplier,2);
@@ -54,7 +66,6 @@ class _ProductPageState extends State<ProductPage> {
        fat = roundDouble(product.fat * multiplier, 2);
        carboh = roundDouble(product.carboh * multiplier, 2);
      });
-     print(calory.toString()+" "+fat.toString()+" "+squi.toString()+" "+carboh.toString());
   }
 
   double roundDouble(double value, int places){ 
@@ -68,7 +79,7 @@ class _ProductPageState extends State<ProductPage> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: (){ addClick();
-              Navigator.pushNamed(context, "/add");
+              Navigator.popAndPushNamed(context, "/navigator/2");
             },
             icon:Icon(Icons.arrow_back, size: 24,)
           ),
@@ -125,13 +136,13 @@ class _ProductPageState extends State<ProductPage> {
 
                           SizedBox(height:10),
 
-                        // Padding(
-                        //   padding: EdgeInsets.only(left:15, right: 15, bottom: 3, top: 3),
-                          // child:
-                            TextFormField(
+                          Form(key: _formKey, 
+                            child: TextFormField(
                               onChanged: (text){
-                                multiData(int.parse(text));
+                                if(_formKey.currentState.validate()){}
+                                multiData(double.parse(text));
                               },
+                              controller: _grammController,
                               style: DesignTheme.inputText,
                               cursorColor: DesignTheme.mainColor,
                               decoration: InputDecoration(
@@ -140,15 +151,26 @@ class _ProductPageState extends State<ProductPage> {
                                 labelStyle: DesignTheme.labelSearchTextBigger,
                                 suffixIcon: Icon(
                                     Icons.people,
-                                    // color: DesignTheme.blackColor,
                                   )
                             ),
+                            validator: (value){
+                              if (value.isEmpty){
+                                setWriteStatus(false);
+                                return 'Введите вес продукта';
+                              } 
+                              else if (!(double.parse(value) is double)){
+                                setWriteStatus(false);
+                                return 'Введите число';
+                              } 
+                              else {
+                                setWriteStatus(true);
+                              }
+                            },
                           ),
-
+                        ),
                         ]),
                       ),
                     ),
-                  // ),
 
                     SizedBox(height:10),
 
@@ -210,7 +232,7 @@ class _ProductPageState extends State<ProductPage> {
                                 var strNow = toStrDate(now);
                                 
                                 if(res.date == strNow){
-                                    Navigator.pushNamed(context, '/');
+                                    Navigator.pushNamed(context, '/navigator/1');
                                 }
 
                               });
